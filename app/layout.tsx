@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
+import UserSync from "@/components/UserSync";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +31,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
       >
         <ClerkProvider
-
           appearance={{
             variables: {
               colorBackground: "var(--background)",
@@ -40,11 +41,13 @@ export default function RootLayout({
               colorRing: "var(--primary)",
               colorPrimaryForeground: "var(--background)",
               colorPrimary: "var(--primary)",
-              colorNeutral: "var(--background)",
+              colorNeutral: "var(--primary)",
             },
           }}
         >
+          <UserSync />
           {children}
+          <Toaster richColors position="bottom-right" />
         </ClerkProvider>
       </body>
     </html>
