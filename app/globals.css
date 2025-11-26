@@ -3,6 +3,27 @@
 
 @custom-variant dark (&:is(.dark *));
 
+::selection {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+}
+
 :root {
   --background: #ffffff;
   --foreground: #111827;
@@ -179,6 +200,34 @@
   --tracking-wide: calc(var(--tracking-normal) + 0.025em);
   --tracking-wider: calc(var(--tracking-normal) + 0.05em);
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
+}
+
+.cl-socialButtonsBlockButtonText__google {
+  color: var(--primary);
+}
+
+.cl-socialButtonsIconButton {
+  transition: all 0.25s ease-in-out;
+}
+
+.cl-socialButtonsIconButton:hover {
+  background-color: var(--primary);
+}
+
+.bounce-hero {
+  animation: updown 3s ease-in-out infinite alternate;
+}
+
+@keyframes updown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 body {
