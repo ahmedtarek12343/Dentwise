@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import UserSync from "@/components/UserSync";
+import { Providers } from "./Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,8 +47,7 @@ export default function RootLayout({
           }}
         >
           <UserSync />
-          {children}
-          <Toaster richColors position="bottom-right" />
+          <Providers>{children}</Providers>
         </ClerkProvider>
       </body>
     </html>
