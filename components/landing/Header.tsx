@@ -1,9 +1,20 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from "../ui/button";
+import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 const Header = () => {
+  const params = useSearchParams();
+  const error = params.get("error");
+  useEffect(() => {
+    if (error === "unauthorized") {
+      toast.error("You are not authorized to access this page");
+    }
+  }, [params, error]);
   return (
     <header className="sticky top-0 z-50 w-full px-6 py-2 border-b border-border/50 bg-background/80 backdrop-blur-md h-16">
       <div className="container h-full mx-auto flex justify-between items-center">

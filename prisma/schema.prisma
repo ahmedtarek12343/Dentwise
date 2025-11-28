@@ -13,58 +13,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String @id @default(cuid())
-  clerkId String @unique
-  email String @unique
-  firstName String?
-  lastName String?
-  phone String?
+model User {
+  id           String        @id @default(cuid())
+  clerkId      String        @unique
+  email        String        @unique
+  firstName    String?
+  lastName     String?
+  phone        String?
   Appointments Appointment[]
-  createdAt DateTime @default(now()) // memeber since
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime      @default(now()) // memeber since
+  updatedAt    DateTime      @updatedAt
 
   @@map("users")
 }
 
-model Doctor{
-  id String @id @default(cuid())
-  name String 
-  email String @unique
-  phone String
-  speciality String
-  bio String?
-  imageUrl String
-  gender Gender
-  isActive Boolean @default(true)
+model Doctor {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  phone        String
+  speciality   String
+  bio          String?
+  imageUrl     String
+  gender       Gender
+  isActive     Boolean       @default(true)
   Appointments Appointment[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@map("doctors")
 }
 
-model Appointment{
-  id String @id @default(cuid())
-  date DateTime
-  duration Int
-  status AppointmentStatus @default(CONFIRMED)
-  notes String?
-  reason String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Appointment {
+  id        String            @id @default(cuid())
+  date      DateTime
+  duration  Int
+  status    AppointmentStatus @default(CONFIRMED)
+  notes     String?
+  reason    String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
 
   // foriegn keys
-  userId String
+  userId   String
   doctorId String
 
   // relations
-  patient User @relation(fields: [userId], references: [id],onDelete: Cascade)
-  doctor Doctor @relation(fields: [doctorId], references: [id],onDelete: Cascade)
+  patient User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  doctor  Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
 
+  @@index([doctorId(), userId()])
   @@map("appointments")
 }
-
 
 enum Gender {
   MALE

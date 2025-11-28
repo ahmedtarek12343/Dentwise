@@ -1,0 +1,92 @@
+"use client";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { Suspense, useEffect } from "react";
+import Navbar from "./Navbar";
+import { Loader2, SettingsIcon } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { useGetDoctors } from "@/hooks/use-doctors";
+import { useGetAppointments } from "@/hooks/use-appointments";
+import AdminStats from "../admin/AdminStats";
+import DoctorsManagement from "../admin/DoctorsManagement";
+
+const AdminDashboardClient = () => {
+  const params = useSearchParams();
+  const error = params.get("error");
+  const { user } = useUser();
+  const { data: doctors, isLoading, isError } = useGetDoctors();
+  const {
+    data: appointments,
+    isLoading: appointmentsLoading,
+    isError: appointmentsError,
+  } = useGetAppointments();
+
+  const stats = {
+    totalDoctors: doctors?.length,
+    activeDoctors: doctors?.filter((doc) => doc.isActive).length,
+    totalAppointments: appointments?.length,
+    completedAppointments: appointments?.filter(
+      (app) => app.status === "COMPLETED"
+    ).length,
+  };
+
+  useEffect(() => {
+    if (error === "unauthorizedSignedIn") {
+      toast.error("You are not authorized to access this page");
+    }
+  }, [params, error]);
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+
+      <div className="max-w-7xl mx-auto px-6 py-8 pt-24">
+        {/* ADMIN WELCOME */}
+        <div className="mb-12 flex items-center justify-between bg-gradient-to-br from-primary/10 via-primary/5 to-background rounded-3xl p-8 border border-primary/20">
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-primary">
+                Admin Dashboard
+              </span>
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold mb-2">
+                Welcome back, {user?.firstName || "Admin"}!
+              </h1>
+              <p className="text-muted-foreground">
+                Manage doctors, oversee appointments, and monitor your dental
+                practice performance.
+              </p>
+            </div>
+          </div>
+
+          <div className="hidden lg:block">
+            <div className="w-32 h-32 bg-gradient-to-br from-primary/20 to-primary/10 rounded-full flex items-center justify-center">
+              <SettingsIcon className="w-16 h-16 text-primary" />
+            </div>
+          </div>
+        </div>
+        {appointmentsLoading || isLoading ? (
+          <div className="flex items-center justify-center flex-col gap-3 mt-10 h-full">
+            <Loader2 className="w-15 h-15 animate-spin text-primary" />
+            <p className="text-muted-foreground font-semibold">
+              Loading Dashboard...
+            </p>
+          </div>
+        ) : (
+          <>
+            <AdminStats
+              totalDoctors={stats.totalDoctors ?? 0}
+              activeDoctors={stats.activeDoctors ?? 0}
+              totalAppointments={stats.totalAppointments ?? 0}
+              completedAppointments={stats.completedAppointments ?? 0}
+            />
+            <DoctorsManagement />
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboardClient;
