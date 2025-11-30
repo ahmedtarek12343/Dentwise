@@ -101,13 +101,18 @@ const Navbar = () => {
               </span>
             </div>
             {!isLoaded && (
-              <div className="flex gap-2">
-                <div className="flex flex-col gap-1 items-end mt-3">
-                  <Skeleton className="w-22 h-4" />
-                  <Skeleton className="w-44 h-4" />
+              <>
+                <div className="gap-2 md:flex hidden">
+                  <div className="flex flex-col gap-1 items-end mt-3">
+                    <Skeleton className="w-22 h-4" />
+                    <Skeleton className="w-44 h-4" />
+                  </div>
+                  <Skeleton className="w-8 h-8 mt-3 rounded-full" />
                 </div>
-                <Skeleton className="w-8 h-8 mt-3 rounded-full" />
-              </div>
+                <div className="flex gap-2 md:hidden">
+                  <Skeleton className="w-8 h-8 mt-3 rounded-full" />
+                </div>
+              </>
             )}
             <UserButton />
           </div>
