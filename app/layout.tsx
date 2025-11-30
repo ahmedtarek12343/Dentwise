@@ -19,6 +19,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Dentwise | Ai Dental Assistant",
   description: "Get dental advice and treatment plans with AI",
+  icons: {
+    icon: [{ url: "/logo.png", type: "image/png", sizes: "32x32" }],
+  },
 };
 
 export default function RootLayout({
