@@ -106,3 +106,30 @@ export async function editDoctor(data: UpdateDoctorInput) {
     throw new Error(err.message || "Failed to edit doctor");
   }
 }
+
+export async function getAvailableDoctors() {
+  try {
+    const doctors = await prisma.doctor.findMany({
+      where: {
+        isActive: true,
+      },
+      include: {
+        _count: {
+          select: {
+            Appointments: true,
+          },
+        },
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+    return doctors.map((doctor) => ({
+      ...doctor,
+      appointmentCount: doctor._count.Appointments,
+    }));
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to fetch doctors");
+  }
+}

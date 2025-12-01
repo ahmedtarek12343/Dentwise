@@ -1,17 +1,18 @@
 "use server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "../prisma";
+import { revalidatePath } from "next/cache";
 
 function transformAppointment(appointment: any) {
   return {
     ...appointment,
-    patientName: `${appointment.user.firstName || ""} ${
-      appointment.user.lastName || ""
+    patientName: `${appointment.patient.firstName || ""} ${
+      appointment.patient.lastName || ""
     }`.trim(),
-    patientEmail: appointment.user.email,
+    patientEmail: appointment.patient.email,
     doctorName: appointment.doctor.name,
     doctorImageUrl: appointment.doctor.imageUrl || "",
-    date: appointment.date.toISOString().split("T")[0],
+    date: appointment.date,
   };
 }
 
@@ -142,5 +143,86 @@ export async function getUserAppointmentStats() {
       totalAppointments: 0,
       completedAppointments: 0,
     };
+  }
+}
+
+export async function getBookedTimeSlots(doctorId: string, date: string) {
+  try {
+    const appointments = await prisma.appointment.findMany({
+      where: {
+        doctor: {
+          id: doctorId,
+        },
+        date,
+        status: {
+          in: ["COMPLETED", "CONFIRMED"],
+        },
+      },
+      select: {
+        time: true,
+      },
+    });
+    return appointments.map((app) => app.time);
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+interface bookAppointmentInput {
+  doctorId: string;
+  date: string;
+  time: string;
+  duration: number;
+  reason?: string;
+}
+
+export async function bookAppointment(input: bookAppointmentInput) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      throw new Error("Unauthorized");
+    }
+    const user = await prisma.user.findUnique({
+      where: {
+        clerkId: userId,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const appointment = await prisma.appointment.create({
+      data: {
+        userId: user.id,
+        doctorId: input.doctorId,
+        date: input.date,
+        time: input.time,
+        duration: input.duration,
+        reason: input.reason || "General Consultation",
+        status: "CONFIRMED",
+      },
+      include: {
+        patient: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        doctor: {
+          select: {
+            name: true,
+            imageUrl: true,
+          },
+        },
+      },
+    });
+    revalidatePath("/appointments");
+    return transformAppointment(appointment);
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }
