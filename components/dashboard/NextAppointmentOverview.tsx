@@ -8,7 +8,7 @@ const NextAppointmentOverview = async () => {
   const appointments = await getAppointments();
   const upcomingAppointments =
     appointments?.filter((appointment) => {
-      const appointmentDate = parseISO(appointment.date);
+      const appointmentDate = parseISO(appointment.time);
       const today = new Date();
       const isUpcoming =
         isSameDay(appointmentDate, today) || isAfter(appointmentDate, today);
@@ -18,7 +18,7 @@ const NextAppointmentOverview = async () => {
   const nextAppointment = upcomingAppointments[0];
   if (!nextAppointment) return <NoNextAppointments />;
 
-  const appointmentDate = parseISO(nextAppointment.date);
+  const appointmentDate = parseISO(nextAppointment.time);
   const formattedDate = format(appointmentDate, "EEEE, MMMM d, yyyy");
   const isToday = isSameDay(appointmentDate, new Date());
   return (
