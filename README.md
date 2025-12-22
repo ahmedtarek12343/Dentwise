@@ -275,28 +275,3 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👏 Acknowledgments
-
-- [Next.js](https://nextjs.org/) - React framework
-- [Clerk](https://clerk.com/) - Authentication
-- [Vapi](https://vapi.ai/) - Voice AI
-- [Prisma](https://www.prisma.io/) - Database ORM
-- [Resend](https://resend.com/) - Email service
-- [shadcn/ui](https://ui.shadcn.com/) - UI components
-- [Tailwind CSS](https://tailwindcss.com/) - Styling
-
-## 📧 Contact
-
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
-
-Project Link: [https://github.com/yourusername/dentwise](https://github.com/yourusername/dentwise)
-
----
-
-<div align="center">
-  Made with ❤️ by Your Name
-</div>
